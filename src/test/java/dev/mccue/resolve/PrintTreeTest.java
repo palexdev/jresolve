@@ -51,6 +51,9 @@ public class PrintTreeTest {
                 ))
                 .withCache(Cache.standard(tempDir))
                 .run().printTree();
+
+        String got = baos.toString(StandardCharsets.UTF_8);
+        got = got.replaceAll("\\r\\n?", "\n"); // Normalize line endings
         assertEquals(
                 """
                         org.clojure/clojure 1.11.0
@@ -86,8 +89,8 @@ public class PrintTreeTest {
                           . ring/ring-servlet 1.9.3
                             . ring/ring-core 1.9.3
                         """,
-
-                baos.toString(StandardCharsets.UTF_8));
+                got
+        );
     }
 
     @Test

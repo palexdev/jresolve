@@ -328,13 +328,15 @@ public class MavenResolveTest {
         var baos = new ByteArrayOutputStream();
         resolution.printTree(new PrintStream(baos), List.of());
 
+        String got = baos.toString(StandardCharsets.UTF_8);
+        got = got.replaceAll("\\r\\n?", "\n"); // Normalize line endings
         assertEquals(
                 """
                         com.fasterxml.jackson.core/jackson-databind 2.15.2
                           . com.fasterxml.jackson.core/jackson-annotations 2.15.2
                           . com.fasterxml.jackson.core/jackson-core 2.15.2
                         """,
-                baos.toString(StandardCharsets.UTF_8)
+            got
         );
     }
 
@@ -350,11 +352,13 @@ public class MavenResolveTest {
         var baos = new ByteArrayOutputStream();
         resolution.printTree(new PrintStream(baos), List.of());
 
+        String got = baos.toString(StandardCharsets.UTF_8);
+        got = got.replaceAll("\\r\\n?", "\n"); // Normalize line endings
         assertEquals(
                 """
                         com.fasterxml.jackson.core/jackson-databind 2.15.2
                         """,
-                baos.toString(StandardCharsets.UTF_8)
+                got
         );
     }
 
@@ -375,12 +379,14 @@ public class MavenResolveTest {
         var baos = new ByteArrayOutputStream();
         resolution.printTree(new PrintStream(baos), List.of());
 
+        String got = baos.toString(StandardCharsets.UTF_8);
+        got = got.replaceAll("\\r\\n?", "\n"); // Normalize line endings
         assertEquals(
                 """
                         com.fasterxml.jackson.core/jackson-databind 2.15.2
                           . com.fasterxml.jackson.core/jackson-core 2.15.2
                         """,
-                baos.toString(StandardCharsets.UTF_8)
+                got
         );
     }
 }

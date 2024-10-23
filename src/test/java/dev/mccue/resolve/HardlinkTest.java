@@ -35,10 +35,22 @@ public class HardlinkTest {
         } catch (NoSuchFileException e) {}
 
 
-        Files.createDirectories(libs);
-        for (var path : resolved.libraries().values()) {
-            Files.createLink(Path.of(libs.toString(), path.getFileName().toString()), path);
+        try {
+            Files.createDirectories(libs);
+            for (var path : resolved.libraries().values()) {
+                // If developing on an external drive, this fails
+                // Just link to system temp directory
+                Files.createLink(Path.of(System.getProperty("java.io.tmpdir"), path.getFileName().toString()), path);
+            }
+
+        } finally {
+            // Also clean links otherwise subsequent runs will fail
+            for (Path path : resolved.libraries().values()) {
+                Path link = Path.of(System.getProperty("java.io.tmpdir"), path.getFileName().toString());
+                Files.delete(link);
+            }
         }
+
 
     }
 }
