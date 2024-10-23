@@ -314,7 +314,7 @@ public final class MavenRepository {
         var pom = getPomInfo(group, artifact, version, cache);
         poms.add(pom);
         while (true) {
-            var parentPom = getParentPomInfo(poms.get(poms.size() - 1), cache).orElse(null);
+            var parentPom = getParentPomInfo(poms.getLast(), cache).orElse(null);
             if (parentPom == null) {
                 break;
             }

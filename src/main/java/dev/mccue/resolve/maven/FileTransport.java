@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalLong;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
+
 public final class FileTransport implements Transport {
     private final Path root;
 

@@ -32,7 +32,7 @@ public class HardlinkTest {
                     return FileVisitResult.CONTINUE;
                 }
             });
-        } catch (NoSuchFileException e) {}
+        } catch (NoSuchFileException ignored) {}
 
 
         try {

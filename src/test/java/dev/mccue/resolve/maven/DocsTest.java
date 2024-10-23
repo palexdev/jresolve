@@ -6,7 +6,7 @@ import dev.mccue.resolve.*;
 
 public class DocsTest {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         var resolution = new Resolve()
             .addDependency(
                 new Dependency(

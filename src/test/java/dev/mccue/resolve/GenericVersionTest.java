@@ -359,7 +359,7 @@ public class GenericVersionTest extends AbstractVersionTest {
     @Test
     public void testCompareUuidVersionStringStream() {
         // this operation below fails with IAEx if comparison is unstable
-        uuidVersionStringStream().map(this::newVersion).sorted().collect(toList());
+        uuidVersionStringStream().map(this::newVersion).sorted().toList();
     }
 
     private Stream<String> uuidVersionStringStream() {

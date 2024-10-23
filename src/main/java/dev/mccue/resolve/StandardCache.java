@@ -31,7 +31,7 @@ final class StandardCache implements Cache {
     // non-shaded coursier), they will rely on the exact same object for locking here (via String.intern), so that the
     // locks are actually JVM-wide.
     private static Object lockFor(Path cachePath) {
-        String key = "jresolve-jvm-lock-" + cachePath.toString();
+        String key = "jresolve-jvm-lock-" + cachePath;
         Object lock0 = INTERNED_STRINGS.get(key);
         if (lock0 == null) {
             String internedKey = key.intern();

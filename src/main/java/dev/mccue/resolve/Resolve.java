@@ -140,15 +140,14 @@ public final class Resolve {
             }
 
             Queue<QueueEntry> q = new ArrayDeque<>();
-            initialDependencies.forEach((library, dependency) -> {
+            initialDependencies.forEach((library, dependency) ->
                 q.add(
                     new QueueEntry(
                         new Dependency(library, dependency.coordinate(), dependency.exclusions()),
                         new LL.Nil<>(),
                         executorService.submit(() -> dependency.coordinate().getManifest(cache))
                     )
-                );
-            });
+                ));
 
 
             var versionMap = new VersionMap();

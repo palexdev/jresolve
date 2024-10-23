@@ -136,7 +136,7 @@ public sealed interface LL<T> extends Iterable<T> {
     @Override
     default Iterator<T> iterator() {
         var self = this;
-        return new Iterator<T>() {
+        return new Iterator<>() {
             LL<T> head = self;
 
             @Override

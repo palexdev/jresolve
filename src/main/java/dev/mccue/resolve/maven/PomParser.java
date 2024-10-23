@@ -313,17 +313,15 @@ final class PomParser extends DefaultHandler {
             },
             content(
                 new LL.Cons<>("groupId", new LL.Cons<>("exclusion", new LL.Cons<>("exclusions", prefix))),
-                (state, content) -> {
+                (state, content) ->
                     state.dependencyExclusionGroupId =
-                        new PomGroupId.Declared(content);
-                }
+                        new PomGroupId.Declared(content)
             ),
             content(
                 new LL.Cons<>("artifactId", new LL.Cons<>("exclusion", new LL.Cons<>("exclusions", prefix))),
-                (state, content) -> {
+                (state, content) ->
                     state.dependencyExclusionArtifactId =
-                        new PomArtifactId.Declared(content);
-                }
+                        new PomArtifactId.Declared(content)
             )
         );
     }
