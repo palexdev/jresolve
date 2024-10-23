@@ -4,8 +4,8 @@ package dev.mccue.resolve;
 import java.util.Objects;
 
 public record DependencyId(
-        Library library,
-        CoordinateId coordinateId
+    Library library,
+    CoordinateId coordinateId
 ) {
     public DependencyId {
         Objects.requireNonNull(library, "library must not be null");

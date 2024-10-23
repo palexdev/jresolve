@@ -2,7 +2,6 @@ package dev.mccue.resolve.maven;
 
 import dev.mccue.resolve.Artifact;
 import dev.mccue.resolve.Group;
-import dev.mccue.resolve.Library;
 import dev.mccue.resolve.Version;
 
 final class ArtifactNotFound extends RuntimeException {

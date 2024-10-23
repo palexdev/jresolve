@@ -1,12 +1,12 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.*;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+
+import dev.mccue.resolve.*;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,52 +17,52 @@ public class MavenFetchTest {
         var clojure = Dependency.mavenCentral("org.clojure:clojure:1.11.0");
 
         var libraries = new Resolve()
-                .addDependency(clojure)
-                .withCache(Cache.standard(temp))
-                .fetch()
-                .run()
-                .libraries();
+            .addDependency(clojure)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .run()
+            .libraries();
 
         assertEquals(
-                Map.of(
-                        new Library("org.clojure", "clojure"),
-                        Path.of(
-                                temp.toString(),
-                                "https",
-                                "repo1.maven.org",
-                                "maven2",
-                                "org",
-                                "clojure",
-                                "clojure",
-                                "1.11.0",
-                                "clojure-1.11.0.jar"
-                        ),
-                        new Library("org.clojure", "spec.alpha"),
-                        Path.of(
-                                temp.toString(),
-                                "https",
-                                "repo1.maven.org",
-                                "maven2",
-                                "org",
-                                "clojure",
-                                "spec.alpha",
-                                "0.3.218",
-                                "spec.alpha-0.3.218.jar"
-                        ),
-                        new Library("org.clojure", "core.specs.alpha"),
-                        Path.of(
-                                temp.toString(),
-                                "https",
-                                "repo1.maven.org",
-                                "maven2",
-                                "org",
-                                "clojure",
-                                "core.specs.alpha",
-                                "0.2.62",
-                                "core.specs.alpha-0.2.62.jar"
-                        )
+            Map.of(
+                new Library("org.clojure", "clojure"),
+                Path.of(
+                    temp.toString(),
+                    "https",
+                    "repo1.maven.org",
+                    "maven2",
+                    "org",
+                    "clojure",
+                    "clojure",
+                    "1.11.0",
+                    "clojure-1.11.0.jar"
                 ),
-                libraries
+                new Library("org.clojure", "spec.alpha"),
+                Path.of(
+                    temp.toString(),
+                    "https",
+                    "repo1.maven.org",
+                    "maven2",
+                    "org",
+                    "clojure",
+                    "spec.alpha",
+                    "0.3.218",
+                    "spec.alpha-0.3.218.jar"
+                ),
+                new Library("org.clojure", "core.specs.alpha"),
+                Path.of(
+                    temp.toString(),
+                    "https",
+                    "repo1.maven.org",
+                    "maven2",
+                    "org",
+                    "clojure",
+                    "core.specs.alpha",
+                    "0.2.62",
+                    "core.specs.alpha-0.2.62.jar"
+                )
+            ),
+            libraries
         );
     }
 
@@ -72,32 +72,32 @@ public class MavenFetchTest {
         var json = Dependency.mavenCentral("dev.mccue:json:0.2.3");
 
         var result = new Resolve()
-                .addDependency(json)
-                .withCache(Cache.standard(temp))
-                .fetch()
-                .includeSources()
-                .includeDocumentation()
-                .run();
+            .addDependency(json)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .includeSources()
+            .includeDocumentation()
+            .run();
 
         var sources = result.sources();
 
 
         assertEquals(
-                Map.of(
-                        new Library("dev.mccue", "json"),
-                        Path.of(
-                                temp.toString(),
-                                "https",
-                                "repo1.maven.org",
-                                "maven2",
-                                "dev",
-                                "mccue",
-                                "json",
-                                "0.2.3",
-                                "json-0.2.3-sources.jar"
-                        )
-                ),
-                sources
+            Map.of(
+                new Library("dev.mccue", "json"),
+                Path.of(
+                    temp.toString(),
+                    "https",
+                    "repo1.maven.org",
+                    "maven2",
+                    "dev",
+                    "mccue",
+                    "json",
+                    "0.2.3",
+                    "json-0.2.3-sources.jar"
+                )
+            ),
+            sources
         );
     }
 
@@ -108,11 +108,11 @@ public class MavenFetchTest {
         var clojure = Dependency.mavenCentral("org.clojure:clojure:1.11.0");
 
         var result = new Resolve()
-                .addDependency(clojure)
-                .withCache(Cache.standard(temp))
-                .fetch()
-                .includeLibraries(false)
-                .run();
+            .addDependency(clojure)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .includeLibraries(false)
+            .run();
 
         assertEquals(new Fetch.Result(Map.of(), Map.of(), Map.of()), result);
     }
@@ -124,26 +124,26 @@ public class MavenFetchTest {
         var clojure = Dependency.mavenCentral("dev.mccue:json:0.2.3");
 
         var result = new Resolve()
-                .addDependency(clojure)
-                .withCache(Cache.standard(temp))
-                .fetch()
-                .includeLibraries(false)
-                .includeSources()
-                .run();
+            .addDependency(clojure)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .includeLibraries(false)
+            .includeSources()
+            .run();
 
         assertEquals(new Fetch.Result(Map.of(), Map.of(
-                new Library("dev.mccue", "json"),
-                Path.of(
-                        temp.toString(),
-                        "https",
-                        "repo1.maven.org",
-                        "maven2",
-                        "dev",
-                        "mccue",
-                        "json",
-                        "0.2.3",
-                        "json-0.2.3-sources.jar"
-                )
+            new Library("dev.mccue", "json"),
+            Path.of(
+                temp.toString(),
+                "https",
+                "repo1.maven.org",
+                "maven2",
+                "dev",
+                "mccue",
+                "json",
+                "0.2.3",
+                "json-0.2.3-sources.jar"
+            )
         ), Map.of()), result);
     }
 
@@ -154,26 +154,26 @@ public class MavenFetchTest {
         var clojure = Dependency.mavenCentral("dev.mccue:json:0.2.3");
 
         var result = new Resolve()
-                .addDependency(clojure)
-                .withCache(Cache.standard(temp))
-                .fetch()
-                .includeLibraries(false)
-                .includeDocumentation()
-                .run();
+            .addDependency(clojure)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .includeLibraries(false)
+            .includeDocumentation()
+            .run();
 
         assertEquals(new Fetch.Result(Map.of(), Map.of(), Map.of(
-                new Library("dev.mccue", "json"),
-                Path.of(
-                        temp.toString(),
-                        "https",
-                        "repo1.maven.org",
-                        "maven2",
-                        "dev",
-                        "mccue",
-                        "json",
-                        "0.2.3",
-                        "json-0.2.3-javadoc.jar"
-                )
+            new Library("dev.mccue", "json"),
+            Path.of(
+                temp.toString(),
+                "https",
+                "repo1.maven.org",
+                "maven2",
+                "dev",
+                "mccue",
+                "json",
+                "0.2.3",
+                "json-0.2.3-javadoc.jar"
+            )
         )), result);
     }
 
@@ -184,43 +184,43 @@ public class MavenFetchTest {
         var clojure = Dependency.mavenCentral("dev.mccue:json:0.2.3");
 
         var result = new Resolve()
-                .addDependency(clojure)
-                .withCache(Cache.standard(temp))
-                .fetch()
-                .includeLibraries(false)
-                .includeSources()
-                .includeDocumentation()
-                .run();
+            .addDependency(clojure)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .includeLibraries(false)
+            .includeSources()
+            .includeDocumentation()
+            .run();
 
         assertEquals(new Fetch.Result(Map.of(),
-                Map.of(
-                        new Library("dev.mccue", "json"),
-                        Path.of(
-                                temp.toString(),
-                                "https",
-                                "repo1.maven.org",
-                                "maven2",
-                                "dev",
-                                "mccue",
-                                "json",
-                                "0.2.3",
-                                "json-0.2.3-sources.jar"
-                        )
-                ),
-                Map.of(
-                    new Library("dev.mccue", "json"),
-                    Path.of(
-                            temp.toString(),
-                            "https",
-                            "repo1.maven.org",
-                            "maven2",
-                            "dev",
-                            "mccue",
-                            "json",
-                            "0.2.3",
-                            "json-0.2.3-javadoc.jar"
-                    )
+            Map.of(
+                new Library("dev.mccue", "json"),
+                Path.of(
+                    temp.toString(),
+                    "https",
+                    "repo1.maven.org",
+                    "maven2",
+                    "dev",
+                    "mccue",
+                    "json",
+                    "0.2.3",
+                    "json-0.2.3-sources.jar"
                 )
+            ),
+            Map.of(
+                new Library("dev.mccue", "json"),
+                Path.of(
+                    temp.toString(),
+                    "https",
+                    "repo1.maven.org",
+                    "maven2",
+                    "dev",
+                    "mccue",
+                    "json",
+                    "0.2.3",
+                    "json-0.2.3-javadoc.jar"
+                )
+            )
         ), result);
     }
 }

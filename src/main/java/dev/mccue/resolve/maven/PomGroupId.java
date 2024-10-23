@@ -1,10 +1,10 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.Group;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import dev.mccue.resolve.Group;
 
 sealed interface PomGroupId {
     enum Undeclared implements PomGroupId {

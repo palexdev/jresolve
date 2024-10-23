@@ -1,11 +1,10 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.Artifact;
-import dev.mccue.resolve.Group;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import dev.mccue.resolve.Artifact;
 
 sealed interface PomArtifactId {
     enum Undeclared implements PomArtifactId {

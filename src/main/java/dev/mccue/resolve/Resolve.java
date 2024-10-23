@@ -1,8 +1,5 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.maven.MavenCoordinateId;
-import dev.mccue.resolve.util.LL;
-
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.*;
@@ -11,6 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import dev.mccue.resolve.maven.MavenCoordinateId;
+import dev.mccue.resolve.util.LL;
 
 public final class Resolve {
     private final LinkedHashMap<Library, Dependency> dependencies;
@@ -68,10 +68,10 @@ public final class Resolve {
 
     public Result run() {
         return Result.expandDependencies(
-                dependencies,
-                dependencyOverrides,
-                cache,
-                executorService
+            dependencies,
+            dependencyOverrides,
+            cache,
+            executorService
         );
     }
 
@@ -93,31 +93,29 @@ public final class Resolve {
         }
 
         record ExclusionsUpdate(
-                Exclusions newExclusions,
-                boolean wasUpdated
+            Exclusions newExclusions,
+            boolean wasUpdated
         ) {
 
         }
 
         static ExclusionsUpdate updateExclusions(
-                Library library,
-                InclusionDecision inclusionDecision,
-                CoordinateId coordinateId,
-                HashMap<DependencyId, Exclusions> cut,
-                Exclusions exclusions
+            Library library,
+            InclusionDecision inclusionDecision,
+            CoordinateId coordinateId,
+            HashMap<DependencyId, Exclusions> cut,
+            Exclusions exclusions
         ) {
             if (inclusionDecision.included()) {
                 cut.put(new DependencyId(library, coordinateId), exclusions);
                 return new ExclusionsUpdate(exclusions, false);
-            }
-            else if (inclusionDecision == InclusionDecision.SAME_VERSION) {
+            } else if (inclusionDecision == InclusionDecision.SAME_VERSION) {
                 var key = new DependencyId(library, coordinateId);
                 var cutCoord = cut.get(key);
                 var newCut = cutCoord.meet(exclusions);
                 cut.put(key, newCut);
                 return new ExclusionsUpdate(newCut, !newCut.equals(cutCoord));
-            }
-            else {
+            } else {
                 return new ExclusionsUpdate(exclusions, false);
             }
         }
@@ -128,27 +126,27 @@ public final class Resolve {
          * @param cache                cache for files.
          */
         static Result expandDependencies(
-                Map<Library, Dependency> initialDependencies,
-                Map<Library, Dependency> overrideDependencies,
-                Cache cache,
-                ExecutorService executorService
+            Map<Library, Dependency> initialDependencies,
+            Map<Library, Dependency> overrideDependencies,
+            Cache cache,
+            ExecutorService executorService
         ) {
             var cut = new HashMap<DependencyId, Exclusions>();
             record QueueEntry(
-                    Dependency dependency,
-                    LL<DependencyId> path,
-                    Future<Manifest> manifestPrefetch
+                Dependency dependency,
+                LL<DependencyId> path,
+                Future<Manifest> manifestPrefetch
             ) {
             }
 
             Queue<QueueEntry> q = new ArrayDeque<>();
             initialDependencies.forEach((library, dependency) -> {
                 q.add(
-                        new QueueEntry(
-                                new Dependency(library, dependency.coordinate(), dependency.exclusions()),
-                                new LL.Nil<>(),
-                                executorService.submit(() -> dependency.coordinate().getManifest(cache))
-                        )
+                    new QueueEntry(
+                        new Dependency(library, dependency.coordinate(), dependency.exclusions()),
+                        new LL.Nil<>(),
+                        executorService.submit(() -> dependency.coordinate().getManifest(cache))
+                    )
                 );
             });
 
@@ -161,32 +159,32 @@ public final class Resolve {
 
                 var library = queueEntry.dependency.library();
                 var dependency = overrideDependencies.getOrDefault(
-                        library,
-                        queueEntry.dependency
+                    library,
+                    queueEntry.dependency
                 );
 
                 var coordinate = dependency.coordinate();
                 var coordinateId = coordinate.id();
 
                 var decision = versionMap.includeCoordinate(
-                        dependency,
-                        coordinateId,
-                        queueEntry.path
+                    dependency,
+                    coordinateId,
+                    queueEntry.path
                 );
 
                 trace.add(new Trace.Entry(
-                        queueEntry.path.reverse().toJavaList(),
-                        dependency.library(),
-                        dependency.coordinate().id(),
-                        decision
+                    queueEntry.path.reverse().toJavaList(),
+                    dependency.library(),
+                    dependency.coordinate().id(),
+                    decision
                 ));
 
                 var exclusionsUpdate = updateExclusions(
-                        library,
-                        decision,
-                        coordinateId,
-                        cut,
-                        dependency.exclusions()
+                    library,
+                    decision,
+                    coordinateId,
+                    cut,
+                    dependency.exclusions()
                 );
 
                 var exclusions = exclusionsUpdate.newExclusions;
@@ -204,17 +202,17 @@ public final class Resolve {
 
 
                     var afterExclusions = coordinateManifest
-                            .dependencies()
-                            .stream()
-                            .filter(dep -> exclusions.shouldInclude(dep.library()))
-                            .map(dep -> dep.withExclusions(dep.exclusions().join(exclusions)))
-                            .toList();
+                        .dependencies()
+                        .stream()
+                        .filter(dep -> exclusions.shouldInclude(dep.library()))
+                        .map(dep -> dep.withExclusions(dep.exclusions().join(exclusions)))
+                        .toList();
 
                     for (var manifestDep : afterExclusions) {
                         q.add(new QueueEntry(
-                                manifestDep,
-                                queueEntry.path.prepend(new DependencyId(queueEntry.dependency)),
-                                executorService.submit(() -> manifestDep.coordinate().getManifest(cache))
+                            manifestDep,
+                            queueEntry.path.prepend(new DependencyId(queueEntry.dependency)),
+                            executorService.submit(() -> manifestDep.coordinate().getManifest(cache))
                         ));
                     }
                 }
@@ -222,8 +220,8 @@ public final class Resolve {
 
 
             return new Result(
-                    versionMap,
-                    trace
+                versionMap,
+                trace
             );
         }
 
@@ -239,10 +237,10 @@ public final class Resolve {
             }
 
             var roots = trace.stream()
-                    .filter(entry -> entry.path().isEmpty())
-                    .sorted(Comparator.comparing((Trace.Entry entry) -> entry.library().group())
-                            .thenComparing((Trace.Entry entry) -> entry.library().artifact()))
-                    .toList();
+                .filter(entry -> entry.path().isEmpty())
+                .sorted(Comparator.comparing((Trace.Entry entry) -> entry.library().group())
+                    .thenComparing((Trace.Entry entry) -> entry.library().artifact()))
+                .toList();
 
             var q = new ArrayDeque<>(roots);
 
@@ -252,17 +250,17 @@ public final class Resolve {
                 depth = entry.path().size();
 
                 if (entry.inclusionDecision() != InclusionDecision.NEW_TOP_DEP &&
-                        hideLibraries.contains(entry.library())) {
+                    hideLibraries.contains(entry.library())) {
                     continue;
                 }
 
                 boolean superseded = Set
-                                .of(InclusionDecision.SAME_VERSION, InclusionDecision.NEW_DEP)
-                                .contains(entry.inclusionDecision())
-                        &&
-                                !versionMap
-                                        .selectedVersion(entry.library())
-                                        .equals(Optional.of(entry.coordinateId()));
+                                         .of(InclusionDecision.SAME_VERSION, InclusionDecision.NEW_DEP)
+                                         .contains(entry.inclusionDecision())
+                                     &&
+                                     !versionMap
+                                         .selectedVersion(entry.library())
+                                         .equals(Optional.of(entry.coordinateId()));
 
 
                 if (depth != 0) {
@@ -270,13 +268,11 @@ public final class Resolve {
 
 
                     if (!entry.inclusionDecision().included() && !Set.of(InclusionDecision.SAME_VERSION, InclusionDecision.NEW_DEP)
-                            .contains(entry.inclusionDecision())) {
+                        .contains(entry.inclusionDecision())) {
                         out.print("X ");
-                    }
-                    else if (superseded) {
+                    } else if (superseded) {
                         out.print("X ");
-                    }
-                    else {
+                    } else {
                         out.print(". ");
                     }
                 }
@@ -288,17 +284,15 @@ public final class Resolve {
                 out.print(" ");
                 if (entry.coordinateId() instanceof MavenCoordinateId mavenCoordinateId) {
                     out.print(mavenCoordinateId.version());
-                }
-                else {
+                } else {
                     out.print(entry.coordinateId());
                 }
                 if (!entry.inclusionDecision().included() && !Set.of(
-                        InclusionDecision.SAME_VERSION,
-                        InclusionDecision.NEW_DEP
+                    InclusionDecision.SAME_VERSION,
+                    InclusionDecision.NEW_DEP
                 ).contains(entry.inclusionDecision())) {
                     out.print(" " + entry.inclusionDecision());
-                }
-                else if (superseded) {
+                } else if (superseded) {
                     out.print(" " + "SUPERSEDED");
                 }
                 out.println();

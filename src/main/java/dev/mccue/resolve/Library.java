@@ -1,17 +1,17 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.ToolsDeps;
-
 import java.util.Objects;
 
+import dev.mccue.resolve.doc.ToolsDeps;
+
 @ToolsDeps(
-        value = "https://clojure.org/reference/dep_expansion",
-        details = "tools.deps uses 'lib' as the term for this."
+    value = "https://clojure.org/reference/dep_expansion",
+    details = "tools.deps uses 'lib' as the term for this."
 )
 public record Library(
-        Group group,
-        Artifact artifact,
-        Variant variant
+    Group group,
+    Artifact artifact,
+    Variant variant
 ) {
     public Library {
         Objects.requireNonNull(group);
@@ -30,10 +30,10 @@ public record Library(
     @Override
     public String toString() {
         return "Library[group="
-                + group
-                + ", artifact="
-                + artifact
-                + (variant.equals(Variant.DEFAULT) ? "" : ", variant=" + variant)
-                + "]";
+               + group
+               + ", artifact="
+               + artifact
+               + (variant.equals(Variant.DEFAULT) ? "" : ", variant=" + variant)
+               + "]";
     }
 }

@@ -1,21 +1,21 @@
 package dev.mccue.resolve;
 
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
+import org.junit.jupiter.api.Test;
+
 public class HardlinkTest {
     @Test
     public void createHardlinks() throws IOException {
         var resolved = new Resolve()
-                .addDependencies(List.of(
-                        Dependency.mavenCentral("dev.mccue:json:0.2.3")
-                ))
-                .fetch()
-                .run();
+            .addDependencies(List.of(
+                Dependency.mavenCentral("dev.mccue:json:0.2.3")
+            ))
+            .fetch()
+            .run();
 
         var libs = Path.of("libs");
         try {

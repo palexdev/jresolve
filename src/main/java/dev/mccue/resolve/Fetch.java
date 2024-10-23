@@ -1,8 +1,5 @@
 package dev.mccue.resolve;
 
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
-
 import java.io.File;
 import java.lang.module.ModuleFinder;
 import java.nio.file.Path;
@@ -16,6 +13,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 @NullMarked
 public final class Fetch {
@@ -37,6 +37,7 @@ public final class Fetch {
 
     /**
      * An explicit list of dependencies to fetch. Their manifests are ignored.
+     *
      * @param dependencies The list of deps.
      */
     public Fetch(List<Dependency> dependencies) {
@@ -106,10 +107,10 @@ public final class Fetch {
         if (this.includeLibraries) {
             selectedDependencies.forEach(dependency -> {
                 futurePaths.put(
-                        dependency.library(),
-                        this.executorService.submit(() ->
-                                dependency.coordinate().getLibraryLocation(this.cache)
-                        )
+                    dependency.library(),
+                    this.executorService.submit(() ->
+                        dependency.coordinate().getLibraryLocation(this.cache)
+                    )
                 );
             });
         }
@@ -119,10 +120,10 @@ public final class Fetch {
         if (this.includeSources) {
             selectedDependencies.forEach(dependency -> {
                 futureSources.put(
-                        dependency.library(),
-                        this.executorService.submit(() ->
-                                dependency.coordinate().getLibrarySourcesLocation(this.cache)
-                        )
+                    dependency.library(),
+                    this.executorService.submit(() ->
+                        dependency.coordinate().getLibrarySourcesLocation(this.cache)
+                    )
                 );
             });
         }
@@ -131,10 +132,10 @@ public final class Fetch {
         if (this.includeDocumentation) {
             selectedDependencies.forEach(dependency -> {
                 futureDocumentation.put(
-                        dependency.library(),
-                        this.executorService.submit(() ->
-                                dependency.coordinate().getLibraryDocumentationLocation(this.cache)
-                        )
+                    dependency.library(),
+                    this.executorService.submit(() ->
+                        dependency.coordinate().getLibraryDocumentationLocation(this.cache)
+                    )
                 );
             });
         }
@@ -169,16 +170,16 @@ public final class Fetch {
         });
 
         return new Result(
-                Map.copyOf(libraries),
-                Map.copyOf(sources),
-                Map.copyOf(documentation)
+            Map.copyOf(libraries),
+            Map.copyOf(sources),
+            Map.copyOf(documentation)
         );
     }
 
     public record Result(
-            Map<Library, Path> libraries,
-            Map<Library, Path> sources,
-            Map<Library, Path> documentation
+        Map<Library, Path> libraries,
+        Map<Library, Path> sources,
+        Map<Library, Path> documentation
     ) {
         public Result {
             Objects.requireNonNull(libraries);
@@ -188,8 +189,8 @@ public final class Fetch {
 
         public String path(List<Path> extraPaths) {
             return Stream.concat(
-                    libraries.values().stream().map(Path::toString),
-                    extraPaths.stream().map(Path::toString)
+                libraries.values().stream().map(Path::toString),
+                extraPaths.stream().map(Path::toString)
             ).collect(Collectors.joining(File.pathSeparator));
         }
 
@@ -198,8 +199,8 @@ public final class Fetch {
         }
 
         public record Paths(
-                String modulePath,
-                String classPath
+            String modulePath,
+            String classPath
         ) {
             public Paths {
                 Objects.requireNonNull(modulePath);
@@ -208,36 +209,36 @@ public final class Fetch {
         }
 
         public Paths paths(
-                Predicate<Library> shouldGoOnClassPath
+            Predicate<Library> shouldGoOnClassPath
         ) {
             return paths(shouldGoOnClassPath, List.of(), List.of());
         }
 
         public Paths paths(
-                Predicate<Library> shouldGoOnClassPath,
-                List<Path> extraClassPaths,
-                List<Path> extraModulePaths
+            Predicate<Library> shouldGoOnClassPath,
+            List<Path> extraClassPaths,
+            List<Path> extraModulePaths
         ) {
             return new Paths(
-                    Stream.concat(
-                                    libraries.entrySet()
-                                            .stream()
-                                            .filter(entry -> !shouldGoOnClassPath.test(entry.getKey()))
-                                            .map(Map.Entry::getValue)
-                                            .map(Path::toString),
-                                    extraModulePaths.stream().map(Path::toString)
-                            )
-                            .collect(Collectors.joining(File.pathSeparator)),
+                Stream.concat(
+                        libraries.entrySet()
+                            .stream()
+                            .filter(entry -> !shouldGoOnClassPath.test(entry.getKey()))
+                            .map(Map.Entry::getValue)
+                            .map(Path::toString),
+                        extraModulePaths.stream().map(Path::toString)
+                    )
+                    .collect(Collectors.joining(File.pathSeparator)),
 
-                    Stream.concat(
-                                libraries.entrySet()
-                                    .stream()
-                                    .filter(entry -> shouldGoOnClassPath.test(entry.getKey()))
-                                    .map(Map.Entry::getValue)
-                                    .map(Path::toString),
-                                extraClassPaths.stream().map(Path::toString)
-                            )
-                            .collect(Collectors.joining(File.pathSeparator))
+                Stream.concat(
+                        libraries.entrySet()
+                            .stream()
+                            .filter(entry -> shouldGoOnClassPath.test(entry.getKey()))
+                            .map(Map.Entry::getValue)
+                            .map(Path::toString),
+                        extraClassPaths.stream().map(Path::toString)
+                    )
+                    .collect(Collectors.joining(File.pathSeparator))
             );
         }
 

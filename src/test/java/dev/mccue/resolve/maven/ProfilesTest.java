@@ -1,18 +1,5 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.*;
-import dev.mccue.resolve.maven.MavenCoordinateId;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class ProfilesTest {
     /*@Test
     @Disabled("Profiles not yet supported")

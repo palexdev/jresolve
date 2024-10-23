@@ -1,9 +1,9 @@
 package dev.mccue.resolve.util;
 
+import java.util.function.Supplier;
+
 import dev.mccue.resolve.doc.Clojure;
 import dev.mccue.resolve.doc.Vavr;
-
-import java.util.function.Supplier;
 
 @Vavr("https://github.com/vavr-io/vavr/blob/f37e9ef/src/main/java/io/vavr/Lazy.java")
 @Clojure("https://github.com/clojure/clojure/blob/d56812c/src/jvm/clojure/lang/Delay.java")
@@ -19,8 +19,7 @@ public final class Lazy<T> {
     public T get() {
         if (supplier == null) {
             return value;
-        }
-        else {
+        } else {
             var s = supplier;
             if (s != null) {
                 this.value = supplier.get();

@@ -1,9 +1,9 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.ToolsDeps;
-
 import java.nio.file.Path;
 import java.util.Optional;
+
+import dev.mccue.resolve.doc.ToolsDeps;
 
 /**
  * A Coordinate says where you can find information about a dependency.
@@ -17,8 +17,8 @@ import java.util.Optional;
  * </ul>
  */
 @ToolsDeps(
-        value = "https://clojure.org/reference/dep_expansion",
-        details = """
+    value = "https://clojure.org/reference/dep_expansion",
+    details = """
         Most resolvers are built around specifically using maven versions for
         dependencies. tools.deps is the only one where the set of potential coordinate
         types is open to extension for local/git/etc.
@@ -32,12 +32,12 @@ public interface Coordinate {
      * to know exactly what to do to locate a library.
      *
      * <p>
-     *     The big use case of this are version ranges which, while an affront to <b>god</b>
-     *     are nonetheless in many published POMs.
+     * The big use case of this are version ranges which, while an affront to <b>god</b>
+     * are nonetheless in many published POMs.
      * </p>
      *
      * <p>
-     *     Another is snapshot versioning, equally sinful.
+     * Another is snapshot versioning, equally sinful.
      * </p>
      *
      * @return The normalized coordinate
@@ -61,10 +61,10 @@ public interface Coordinate {
 
         public static VersionOrdering fromInt(int comparisonResult) {
             return comparisonResult == 0
-                    ? EQUAL_TO
-                    : comparisonResult > 0
-                    ? GREATER_THAN
-                    : LESS_THAN;
+                ? EQUAL_TO
+                : comparisonResult > 0
+                ? GREATER_THAN
+                : LESS_THAN;
         }
     }
 
@@ -83,7 +83,7 @@ public interface Coordinate {
      * with this coordinate.
      *
      * <p>
-     *     If the library is not downloaded on disk, this method will do so before returning.
+     * If the library is not downloaded on disk, this method will do so before returning.
      * </p>
      */
     Path getLibraryLocation(Cache cache);

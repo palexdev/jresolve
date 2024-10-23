@@ -1,9 +1,7 @@
 package dev.mccue.resolve.maven;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -28,11 +26,11 @@ public final class FileTransport implements Transport {
     public GetFileResult getFile(List<String> pathElements) {
         try {
             return new GetFileResult.Success(
-                    Files.newInputStream(Path.of(
-                            root.toString(),
-                            pathElements.toArray(String[]::new)
-                    )),
-                    OptionalLong.empty()
+                Files.newInputStream(Path.of(
+                    root.toString(),
+                    pathElements.toArray(String[]::new)
+                )),
+                OptionalLong.empty()
             );
         } catch (NoSuchFileException e) {
             return new GetFileResult.NotFound();

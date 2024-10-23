@@ -1,11 +1,11 @@
 package dev.mccue.resolve.maven;
 
 
-import dev.mccue.resolve.doc.Coursier;
-import org.jspecify.annotations.NullMarked;
-
 import java.util.Objects;
 import java.util.function.Function;
+
+import dev.mccue.resolve.doc.Coursier;
+import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L81-L123")
@@ -42,11 +42,10 @@ record Type(String value) implements Comparable<Type> {
     public String toString() {
         if (this.equals(Type.EMPTY)) {
             return "Type[EMPTY]";
-        }
-        else {
+        } else {
             return "Type[" +
-                    "value='" + value + '\'' +
-                    ']';
+                   "value='" + value + '\'' +
+                   ']';
         }
     }
 }

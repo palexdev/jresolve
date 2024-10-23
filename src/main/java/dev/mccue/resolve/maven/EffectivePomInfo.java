@@ -1,18 +1,15 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.Cache;
-import dev.mccue.resolve.Library;
-import dev.mccue.resolve.doc.Rife;
-import org.jspecify.annotations.NullMarked;
-
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
+import dev.mccue.resolve.Cache;
+import dev.mccue.resolve.doc.Rife;
+import org.jspecify.annotations.NullMarked;
 
 /**
  * Represents information derived from a POM after all information
@@ -20,19 +17,19 @@ import java.util.stream.Collectors;
  */
 @NullMarked
 record EffectivePomInfo(
-        PomGroupId groupId,
-        PomArtifactId artifactId,
-        PomVersion version,
-        List<PomDependency> dependencies,
-        List<PomDependency> dependencyManagement,
-        PomPackaging packaging,
-        Map<String, String> properties
+    PomGroupId groupId,
+    PomArtifactId artifactId,
+    PomVersion version,
+    List<PomDependency> dependencies,
+    List<PomDependency> dependencyManagement,
+    PomPackaging packaging,
+    Map<String, String> properties
 ) {
 
     static EffectivePomInfo from(
-            final ChildHavingPomInfo childHavingPomInfo,
-            final Runtime.Version jdkVersion,
-            final Os os
+        final ChildHavingPomInfo childHavingPomInfo,
+        final Runtime.Version jdkVersion,
+        final Os os
     ) {
         var properties = new LinkedHashMap<String, String>();
 
@@ -50,10 +47,10 @@ record EffectivePomInfo(
         properties.put("os.version", os.version());
 
         Function<String, String> resolve =
-                str -> resolveProperties(properties, str);
+            str -> resolveProperties(properties, str);
 
         Function<PomDependency, PomDependency> resolveDep = dependency ->
-                dependency.map(resolve);
+            dependency.map(resolve);
 
         PomGroupId groupId = PomGroupId.Undeclared.INSTANCE;
         PomVersion version = PomVersion.Undeclared.INSTANCE;
@@ -87,28 +84,28 @@ record EffectivePomInfo(
         while (top != null) {
 
             top.dependencies()
-                    .forEach(dependency -> {
-                        var newDep = resolveDep.apply(dependency);
-                        dependencies.put(PomDependencyKey.from(newDep), newDep);
-                    });
+                .forEach(dependency -> {
+                    var newDep = resolveDep.apply(dependency);
+                    dependencies.put(PomDependencyKey.from(newDep), newDep);
+                });
 
             top.dependencyManagement()
-                    .forEach(dependency -> {
-                        var newDep = resolveDep.apply(dependency);
-                        dependencyManagement.put(PomDependencyKey.from(newDep), newDep);
-                    });
+                .forEach(dependency -> {
+                    var newDep = resolveDep.apply(dependency);
+                    dependencyManagement.put(PomDependencyKey.from(newDep), newDep);
+                });
 
             top = top.child().orElse(null);
         }
 
         return new EffectivePomInfo(
-                groupId,
-                artifactId,
-                version,
-                List.copyOf(dependencies.values()),
-                List.copyOf(dependencyManagement.values()),
-                packaging,
-                properties
+            groupId,
+            artifactId,
+            version,
+            List.copyOf(dependencies.values()),
+            List.copyOf(dependencyManagement.values()),
+            packaging,
+            properties
         );
     }
 
@@ -116,46 +113,45 @@ record EffectivePomInfo(
         var props = new LinkedHashMap<>(properties);
 
         var dependencyManagementWithImportsFlattened = this.dependencyManagement.stream()
-                .mapMulti((PomDependency dependency, Consumer<PomDependency> addDep) -> {
-                    if (!dependency.scope().orElse(Scope.COMPILE).equals(Scope.IMPORT)) {
-                        addDep.accept(dependency);
-                    }
-                    else {
-                        dependency = dependency.map(s -> resolveProperties(props, s));
-                        var effectiveBom = EffectivePomInfo.from(repository.getAllPoms(
-                                        dependency.groupId().orElseThrow(),
-                                        dependency.artifactId().orElseThrow(),
-                                        dependency.version().orElseThrow(),
-                                        cache
-                                ), jdkVersion, os)
-                                .resolveImports(repository, cache, jdkVersion, os);
+            .mapMulti((PomDependency dependency, Consumer<PomDependency> addDep) -> {
+                if (!dependency.scope().orElse(Scope.COMPILE).equals(Scope.IMPORT)) {
+                    addDep.accept(dependency);
+                } else {
+                    dependency = dependency.map(s -> resolveProperties(props, s));
+                    var effectiveBom = EffectivePomInfo.from(repository.getAllPoms(
+                            dependency.groupId().orElseThrow(),
+                            dependency.artifactId().orElseThrow(),
+                            dependency.version().orElseThrow(),
+                            cache
+                        ), jdkVersion, os)
+                        .resolveImports(repository, cache, jdkVersion, os);
 
-                        // Properties in declared POM take precedence over those in the BOM.
-                        effectiveBom.properties.forEach((k, v) -> {
-                            if (!props.containsKey(k)) {
-                                props.put(k, v);
-                            }
-                        });
+                    // Properties in declared POM take precedence over those in the BOM.
+                    effectiveBom.properties.forEach((k, v) -> {
+                        if (!props.containsKey(k)) {
+                            props.put(k, v);
+                        }
+                    });
 
-                        effectiveBom.dependencyManagement.forEach(addDep);
-                    }
-                })
-                .toList();
+                    effectiveBom.dependencyManagement.forEach(addDep);
+                }
+            })
+            .toList();
 
         return new EffectivePomInfo(
-                groupId,
-                artifactId,
-                version,
-                dependencies
-                        .stream()
-                        .map(dep -> dep.map(s -> resolveProperties(props, s)))
-                        .toList(),
-                dependencyManagementWithImportsFlattened
-                        .stream()
-                        .map(dep -> dep.map(s -> resolveProperties(props, s)))
-                        .toList(),
-                packaging,
-                props
+            groupId,
+            artifactId,
+            version,
+            dependencies
+                .stream()
+                .map(dep -> dep.map(s -> resolveProperties(props, s)))
+                .toList(),
+            dependencyManagementWithImportsFlattened
+                .stream()
+                .map(dep -> dep.map(s -> resolveProperties(props, s)))
+                .toList(),
+            packaging,
+            props
         );
     }
 
@@ -164,19 +160,19 @@ record EffectivePomInfo(
     https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html
      */
     private record PomDependencyKey(
-            PomGroupId groupId,
-            PomArtifactId artifactId,
-            PomVersion version,
-            PomClassifier classifier,
-            PomType type
+        PomGroupId groupId,
+        PomArtifactId artifactId,
+        PomVersion version,
+        PomClassifier classifier,
+        PomType type
     ) {
         static PomDependencyKey from(PomDependency pomDependency) {
             return new PomDependencyKey(
-                    pomDependency.groupId(),
-                    pomDependency.artifactId(),
-                    pomDependency.version(),
-                    pomDependency.classifier(),
-                    pomDependency.type()
+                pomDependency.groupId(),
+                pomDependency.artifactId(),
+                pomDependency.version(),
+                pomDependency.classifier(),
+                pomDependency.type()
             );
         }
     }

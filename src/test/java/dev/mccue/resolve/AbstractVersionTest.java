@@ -2,7 +2,8 @@ package dev.mccue.resolve;
 
 import dev.mccue.resolve.doc.Maven;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @Maven("https://github.com/apache/maven-resolver/blob/97dfd1c2b9deb15734d5e401807e55cd0498332a/maven-resolver-util/src/test/java/org/eclipse/aether/util/version/AbstractVersionTest.java")
 abstract class AbstractVersionTest {

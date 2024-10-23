@@ -1,8 +1,8 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.ToolsDeps;
-
 import java.util.List;
+
+import dev.mccue.resolve.doc.ToolsDeps;
 
 @ToolsDeps("The word 'manifest'")
 public interface Manifest {

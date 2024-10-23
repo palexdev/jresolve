@@ -1,10 +1,10 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.Coursier;
-import dev.mccue.resolve.doc.Maven;
-
 import java.math.BigInteger;
 import java.util.*;
+
+import dev.mccue.resolve.doc.Coursier;
+import dev.mccue.resolve.doc.Maven;
 
 @Coursier("https://github.com/coursier/coursier/blob/8882fb4/modules/core/shared/src/main/scala/coursier/core/Version.scala")
 @Maven("https://github.com/apache/maven-resolver/blob/97dfd1c/maven-resolver-util/src/main/java/org/eclipse/aether/util/version/GenericVersion.java")
@@ -46,8 +46,8 @@ public final class Version implements Comparable<Version> {
                 number = item.isNumber();
             }
             if (end == i
-                    && (i == items.size() - 1 || items.get(i - 1).isNumber() == item.isNumber())
-                    && item.compareTo(null) == 0) {
+                && (i == items.size() - 1 || items.get(i - 1).isNumber() == item.isNumber())
+                && item.compareTo(null) == 0) {
                 items.remove(i);
                 end--;
             }
@@ -300,12 +300,9 @@ public final class Version implements Comparable<Version> {
                 rel = kind.value - that.kind.value;
                 if (rel == 0) {
                     switch (kind) {
-                        case BIGINT ->
-                                rel = ((BigInteger) value).compareTo((BigInteger) that.value);
-                        case INT, QUALIFIER ->
-                                rel = ((Integer) value).compareTo((Integer) that.value);
-                        case STRING ->
-                                rel = ((String) value).compareToIgnoreCase((String) that.value);
+                        case BIGINT -> rel = ((BigInteger) value).compareTo((BigInteger) that.value);
+                        case INT, QUALIFIER -> rel = ((Integer) value).compareTo((Integer) that.value);
+                        case STRING -> rel = ((String) value).compareToIgnoreCase((String) that.value);
                     }
                 }
             }

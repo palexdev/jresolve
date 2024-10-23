@@ -1,8 +1,8 @@
 package dev.mccue.resolve.maven;
 
 record PomExclusion(
-        PomGroupId groupId,
-        PomArtifactId artifactId
+    PomGroupId groupId,
+    PomArtifactId artifactId
 ) {
 
 }

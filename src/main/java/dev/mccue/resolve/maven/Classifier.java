@@ -1,10 +1,10 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.Variant;
-import dev.mccue.resolve.doc.Coursier;
-
 import java.util.Objects;
 import java.util.function.Function;
+
+import dev.mccue.resolve.Variant;
+import dev.mccue.resolve.doc.Coursier;
 
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L125-L143")
 public record Classifier(String value) implements Comparable<Classifier> {
@@ -34,11 +34,10 @@ public record Classifier(String value) implements Comparable<Classifier> {
     public String toString() {
         if (this.equals(Classifier.EMPTY)) {
             return "Classifier[EMPTY]";
-        }
-        else {
+        } else {
             return "Classifier[" +
-                    "value='" + value + '\'' +
-                    ']';
+                   "value='" + value + '\'' +
+                   ']';
         }
     }
 }

@@ -6,9 +6,9 @@ import dev.mccue.resolve.Group;
 import dev.mccue.resolve.Version;
 
 public record MavenCoordinateId(
-        Group group,
-        Artifact artifact,
-        Version version
+    Group group,
+    Artifact artifact,
+    Version version
 ) implements CoordinateId {
 
 }

@@ -32,6 +32,7 @@ public sealed interface LL<T> extends Iterable<T> {
             return "[]";
         }
     }
+
     record Cons<T>(T head, LL<T> tail) implements LL<T> {
         public Cons {
             Objects.requireNonNull(head, "head must not be null");
@@ -62,8 +63,8 @@ public sealed interface LL<T> extends Iterable<T> {
         @Override
         public boolean isPrefix(LL<T> other) {
             return other instanceof LL.Cons<T> otherCons
-                    && otherCons.head.equals(this.head)
-                    && this.tail.isPrefix(otherCons.tail);
+                   && otherCons.head.equals(this.head)
+                   && this.tail.isPrefix(otherCons.tail);
         }
 
         @Override
@@ -101,8 +102,8 @@ public sealed interface LL<T> extends Iterable<T> {
         LL<T> head = new LL.Nil<>();
         for (int i = list.size() - 1; i >= 0; i--) {
             head = new LL.Cons<>(
-                    list.get(i),
-                    head
+                list.get(i),
+                head
             );
         }
         return head;
@@ -127,8 +128,7 @@ public sealed interface LL<T> extends Iterable<T> {
     default Cons<T> assumeNotEmpty() {
         if (!(this instanceof LL.Cons<T> cons)) {
             throw new IllegalStateException("Assumed to be not empty");
-        }
-        else {
+        } else {
             return cons;
         }
     }
@@ -138,6 +138,7 @@ public sealed interface LL<T> extends Iterable<T> {
         var self = this;
         return new Iterator<T>() {
             LL<T> head = self;
+
             @Override
             public boolean hasNext() {
                 return head instanceof LL.Cons<T>;
@@ -148,8 +149,7 @@ public sealed interface LL<T> extends Iterable<T> {
                 if (head instanceof LL.Cons<T> cons) {
                     head = cons.tail;
                     return cons.head;
-                }
-                else {
+                } else {
                     throw new NoSuchElementException();
                 }
             }

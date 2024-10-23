@@ -1,15 +1,15 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.maven.MavenCoordinate;
-import dev.mccue.resolve.maven.MavenRepository;
-
 import java.util.List;
 import java.util.Objects;
 
+import dev.mccue.resolve.maven.MavenCoordinate;
+import dev.mccue.resolve.maven.MavenRepository;
+
 public record Dependency(
-        Library library,
-        Coordinate coordinate,
-        Exclusions exclusions
+    Library library,
+    Coordinate coordinate,
+    Exclusions exclusions
 ) {
     public Dependency {
         Objects.requireNonNull(library, "library must not be null.");
@@ -34,62 +34,62 @@ public record Dependency(
         }
 
         return new Dependency(
-                new Library(parts[0], parts[1]),
-                new MavenCoordinate(
-                        new Group(parts[0]),
-                        new Artifact(parts[1]),
-                        new Version(parts[2]),
-                        repositories
-                )
+            new Library(parts[0], parts[1]),
+            new MavenCoordinate(
+                new Group(parts[0]),
+                new Artifact(parts[1]),
+                new Version(parts[2]),
+                repositories
+            )
         );
     }
 
 
     public static Dependency maven(
-            Group group,
-            Artifact artifact,
-            Version version,
-            List<MavenRepository> repositories
+        Group group,
+        Artifact artifact,
+        Version version,
+        List<MavenRepository> repositories
     ) {
         return new Dependency(
-                new Library(group, artifact),
-                new MavenCoordinate(
-                        group,
-                        artifact,
-                        version,
-                        repositories
-                )
+            new Library(group, artifact),
+            new MavenCoordinate(
+                group,
+                artifact,
+                version,
+                repositories
+            )
         );
     }
 
     public static Dependency maven(
-            Group group,
-            Artifact artifact,
-            Version version,
-            MavenRepository repository
+        Group group,
+        Artifact artifact,
+        Version version,
+        MavenRepository repository
     ) {
         return maven(group, artifact, version, List.of(repository));
     }
 
     public static Dependency maven(
-            String group,
-            String artifact,
-            String version,
-            List<MavenRepository> repositories
+        String group,
+        String artifact,
+        String version,
+        List<MavenRepository> repositories
     ) {
         return maven(
-                new Group(group),
-                new Artifact(artifact),
-                new Version(version),
-                repositories
+            new Group(group),
+            new Artifact(artifact),
+            new Version(version),
+            repositories
         );
     }
 
     public static Dependency maven(
-            String group,
-            String artifact,
-            String version,
-            MavenRepository repository
+        String group,
+        String artifact,
+        String version,
+        MavenRepository repository
     ) {
         return maven(group, artifact, version, List.of(repository));
     }
@@ -102,19 +102,19 @@ public record Dependency(
 
     public static Dependency mavenCentral(Group group, Artifact artifact, Version version) {
         return maven(
-                group,
-                artifact,
-                version,
-                List.of(MavenRepository.central())
+            group,
+            artifact,
+            version,
+            List.of(MavenRepository.central())
         );
     }
 
     public static Dependency mavenCentral(String group, String artifact, String version) {
         return maven(
-                new Group(group),
-                new Artifact(artifact),
-                new Version(version),
-                List.of(MavenRepository.central())
+            new Group(group),
+            new Artifact(artifact),
+            new Version(version),
+            List.of(MavenRepository.central())
         );
     }
 

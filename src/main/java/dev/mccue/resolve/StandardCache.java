@@ -1,9 +1,8 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.Coursier;
-import org.jspecify.annotations.NullMarked;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.System.Logger.Level;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -13,13 +12,15 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Supplier;
+
+import dev.mccue.resolve.doc.Coursier;
+import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 @Coursier("""
-        https://github.com/coursier/coursier/blob/929301cd078b6ba13ea78d5065cb07130576839a/modules/paths/src/main/java/coursier/paths/CachePath.java#L117
-        """)
+    https://github.com/coursier/coursier/blob/929301cd078b6ba13ea78d5065cb07130576839a/modules/paths/src/main/java/coursier/paths/CachePath.java#L117
+    """)
 final class StandardCache implements Cache {
     private static final System.Logger LOG = System.getLogger(StandardCache.class.getName());
 
@@ -39,6 +40,7 @@ final class StandardCache implements Cache {
         }
         return lock0;
     }
+
     private final Path root;
 
     public StandardCache(Path root) {
@@ -52,15 +54,15 @@ final class StandardCache implements Cache {
 
     private Path keyPath(CacheKey key) {
         return Path.of(
-                root.toString(),
-                key.components().toArray(String[]::new)
+            root.toString(),
+            key.components().toArray(String[]::new)
         );
     }
 
     @Override
     public boolean equals(Object obj) {
         return obj instanceof StandardCache standardCache
-                && this.root.equals(standardCache.root);
+               && this.root.equals(standardCache.root);
     }
 
     @Override
@@ -98,8 +100,8 @@ final class StandardCache implements Cache {
 
                     try (var inputStream = data.get();
                          var outputStream = Files.newOutputStream(
-                                 filePath,
-                                 StandardOpenOption.CREATE_NEW
+                             filePath,
+                             StandardOpenOption.CREATE_NEW
                          )) {
                         LOG.log(Level.TRACE, () -> "Transferring contents to file. filePath=" + filePath);
                         inputStream.transferTo(outputStream);
@@ -126,11 +128,11 @@ final class StandardCache implements Cache {
             synchronized (lockFor(cache)) {
                 Path lockFile = cache.resolve(".structure.lock");
                 Files.createDirectories(lockFile.getParent());
-                try(FileChannel channel = FileChannel.open(
-                        lockFile,
-                        StandardOpenOption.CREATE,
-                        StandardOpenOption.WRITE,
-                        StandardOpenOption.DELETE_ON_CLOSE
+                try (FileChannel channel = FileChannel.open(
+                    lockFile,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.DELETE_ON_CLOSE
                 )) {
                     FileLock lock = null;
                     try {
@@ -138,13 +140,11 @@ final class StandardCache implements Cache {
 
                         try {
                             runnable.run();
-                        }
-                        finally {
+                        } finally {
                             lock.release();
                             lock = null;
                         }
-                    }
-                    finally {
+                    } finally {
                         if (lock != null) lock.release();
                     }
                 }
@@ -174,20 +174,19 @@ final class StandardCache implements Cache {
                     }
                 });
                 LOG.log(Level.TRACE, () -> "Released structural lock. root=" + root);
-            }
-            else {
+            } else {
                 LOG.log(Level.TRACE, () -> "File exists. filePath=" + filePath);
             }
 
             LOG.log(Level.TRACE, () -> "About to get data from input source. data=" + data);
             try {
                 try (
-                        var inputStream = data.get();
-                        var outputStream = Files.newOutputStream(
-                             filePath,
-                             StandardOpenOption.CREATE,
-                             StandardOpenOption.WRITE
-                        )
+                    var inputStream = data.get();
+                    var outputStream = Files.newOutputStream(
+                        filePath,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE
+                    )
                 ) {
                     LOG.log(Level.TRACE, () -> "Transferring contents to file. filePath=" + filePath);
                     inputStream.transferTo(outputStream);

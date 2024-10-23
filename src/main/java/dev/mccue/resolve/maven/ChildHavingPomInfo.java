@@ -9,14 +9,14 @@ import java.util.function.Function;
  * and included into a linked-list.
  */
 record ChildHavingPomInfo(
-        PomGroupId groupId,
-        PomArtifactId artifactId,
-        PomVersion version,
-        List<PomDependency> dependencies,
-        List<PomDependency> dependencyManagement,
-        List<PomProperty> properties,
-        PomPackaging packaging,
-        Optional<ChildHavingPomInfo> child
+    PomGroupId groupId,
+    PomArtifactId artifactId,
+    PomVersion version,
+    List<PomDependency> dependencies,
+    List<PomDependency> dependencyManagement,
+    List<PomProperty> properties,
+    PomPackaging packaging,
+    Optional<ChildHavingPomInfo> child
 ) {
 
     void printPath(Function<ChildHavingPomInfo, ?> f) {

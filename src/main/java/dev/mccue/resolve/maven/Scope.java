@@ -1,10 +1,10 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.doc.Coursier;
-import org.jspecify.annotations.NullMarked;
-
 import java.util.Objects;
 import java.util.function.Function;
+
+import dev.mccue.resolve.doc.Coursier;
+import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L165-L197")

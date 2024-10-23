@@ -3,8 +3,8 @@ package dev.mccue.resolve;
 import java.util.Objects;
 
 public record Exclusion(
-        Group group,
-        Artifact artifact
+    Group group,
+    Artifact artifact
 ) {
     public static final Exclusion ALL = new Exclusion(Group.ALL, Artifact.ALL);
 

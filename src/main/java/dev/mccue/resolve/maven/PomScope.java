@@ -1,9 +1,9 @@
 package dev.mccue.resolve.maven;
 
-import org.jspecify.annotations.NullMarked;
-
 import java.util.Objects;
 import java.util.function.Function;
+
+import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 sealed interface PomScope {

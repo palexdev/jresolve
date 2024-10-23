@@ -1,12 +1,11 @@
 package dev.mccue.resolve.maven;
 
-import dev.mccue.resolve.Version;
-import dev.mccue.resolve.doc.Coursier;
-import org.jspecify.annotations.NullMarked;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import dev.mccue.resolve.Version;
+import org.jspecify.annotations.NullMarked;
 
 @NullMarked
 sealed interface PomVersion {
@@ -56,6 +55,7 @@ sealed interface PomVersion {
     }
 
     Version orElseThrow();
+
     PomVersion map(Function<String, String> f);
 
     void ifDeclared(Consumer<String> cb);

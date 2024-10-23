@@ -1,15 +1,14 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.Coursier;
-
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+
+import dev.mccue.resolve.doc.Coursier;
 
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L8-L9")
 public record Group(String value) implements Comparable<Group> {
     public static final Group ALL = new Group("*");
+
     public Group {
         Objects.requireNonNull(value, "value must not be null");
     }

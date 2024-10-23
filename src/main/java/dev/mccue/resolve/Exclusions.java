@@ -1,10 +1,10 @@
 package dev.mccue.resolve;
 
-import dev.mccue.resolve.doc.Coursier;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import dev.mccue.resolve.doc.Coursier;
 
 /**
  * A set of {@link Exclusion}s, optimized for memory use.
@@ -21,25 +21,25 @@ public final class Exclusions {
     private Exclusions(ExclusionData exclusionData) {
         this.hash = 0;
         this.exclusionData = Objects.requireNonNull(
-                exclusionData,
-                "exclusionData must not be null"
+            exclusionData,
+            "exclusionData must not be null"
         );
     }
 
     public static Exclusions of(
-            Set<Exclusion> exclusions
+        Set<Exclusion> exclusions
     ) {
         return of(List.copyOf(exclusions));
     }
 
     public static Exclusions of(
-            Exclusion... exclusions
+        Exclusion... exclusions
     ) {
         return of(Arrays.asList(exclusions));
     }
 
     public static Exclusions of(
-            List<Exclusion> exclusions
+        List<Exclusion> exclusions
     ) {
         if (exclusions.isEmpty()) {
             return NONE;
@@ -64,13 +64,13 @@ public final class Exclusions {
         }
 
         return new Exclusions(new ExcludeSpecific(
-                Set.copyOf(excludeByGroup0),
-                Set.copyOf(excludeByArtifact0),
-                remaining0.stream()
-                        .filter(exclusion ->
-                                !excludeByGroup0.contains(exclusion.group())
-                                    && !excludeByArtifact0.contains(exclusion.artifact()))
-                        .collect(Collectors.toUnmodifiableSet()))
+            Set.copyOf(excludeByGroup0),
+            Set.copyOf(excludeByArtifact0),
+            remaining0.stream()
+                .filter(exclusion ->
+                    !excludeByGroup0.contains(exclusion.group())
+                    && !excludeByArtifact0.contains(exclusion.artifact()))
+                .collect(Collectors.toUnmodifiableSet()))
         );
     }
 
@@ -82,11 +82,9 @@ public final class Exclusions {
         var newData = this.exclusionData.join(other.exclusionData);
         if (newData == this.exclusionData) {
             return this;
-        }
-        else if (newData == other.exclusionData) {
+        } else if (newData == other.exclusionData) {
             return other;
-        }
-        else {
+        } else {
             return new Exclusions(newData);
         }
     }
@@ -95,11 +93,9 @@ public final class Exclusions {
         var newData = this.exclusionData.meet(other.exclusionData);
         if (newData == this.exclusionData) {
             return this;
-        }
-        else if (newData == other.exclusionData) {
+        } else if (newData == other.exclusionData) {
             return other;
-        }
-        else {
+        } else {
             return new Exclusions(newData);
         }
     }
@@ -108,8 +104,7 @@ public final class Exclusions {
         var newData = this.exclusionData.map(f);
         if (newData == this.exclusionData) {
             return this;
-        }
-        else {
+        } else {
             return new Exclusions(newData);
         }
     }
@@ -128,11 +123,12 @@ public final class Exclusions {
 
     sealed interface ExclusionData {
         boolean shouldInclude(
-                Group group,
-                Artifact artifact
+            Group group,
+            Artifact artifact
         );
 
         ExclusionData join(ExclusionData other);
+
         ExclusionData meet(ExclusionData other);
 
         ExclusionData map(Function<String, String> f);
@@ -234,14 +230,14 @@ public final class Exclusions {
     }
 
     record ExcludeSpecific(
+        Set<Group> byGroup,
+        Set<Artifact> byArtifact,
+        Set<Exclusion> specific
+    ) implements ExclusionData {
+        public ExcludeSpecific(
             Set<Group> byGroup,
             Set<Artifact> byArtifact,
             Set<Exclusion> specific
-    ) implements ExclusionData {
-        public ExcludeSpecific(
-                Set<Group> byGroup,
-                Set<Artifact> byArtifact,
-                Set<Exclusion> specific
         ) {
             this.byGroup = Set.copyOf(byGroup);
             this.byArtifact = Set.copyOf(byArtifact);
@@ -251,8 +247,8 @@ public final class Exclusions {
         @Override
         public boolean shouldInclude(Group group, Artifact artifact) {
             return !this.byGroup.contains(group)
-                    && !this.byArtifact.contains(artifact)
-                    && !this.specific.contains(new Exclusion(group, artifact));
+                   && !this.byArtifact.contains(artifact)
+                   && !this.specific.contains(new Exclusion(group, artifact));
         }
 
         @Override
@@ -271,23 +267,23 @@ public final class Exclusions {
 
                     var joinedSpecific = new HashSet<Exclusion>();
                     this.specific
-                            .stream()
-                            .filter(exclusion ->
-                                    !otherByOrg.contains(exclusion.group()) &&
-                                    !otherByArtifact.contains(exclusion.artifact()))
-                            .forEach(joinedSpecific::add);
+                        .stream()
+                        .filter(exclusion ->
+                            !otherByOrg.contains(exclusion.group()) &&
+                            !otherByArtifact.contains(exclusion.artifact()))
+                        .forEach(joinedSpecific::add);
 
                     otherSpecific
-                            .stream()
-                            .filter(exclusion ->
-                                    !byGroup.contains(exclusion.group()) &&
-                                    !byArtifact.contains(exclusion.artifact()))
-                            .forEach(joinedSpecific::add);
+                        .stream()
+                        .filter(exclusion ->
+                            !byGroup.contains(exclusion.group()) &&
+                            !byArtifact.contains(exclusion.artifact()))
+                        .forEach(joinedSpecific::add);
 
                     yield new ExcludeSpecific(
-                            Set.copyOf(joinedByGroup),
-                            Set.copyOf(joinedByArtifact),
-                            Set.copyOf(joinedSpecific)
+                        Set.copyOf(joinedByGroup),
+                        Set.copyOf(joinedByArtifact),
+                        Set.copyOf(joinedSpecific)
                     );
                 }
             };
@@ -300,42 +296,41 @@ public final class Exclusions {
                 case ExcludeAll __ -> this;
                 case ExcludeSpecific(var otherByGroup, var otherByArtifact, var otherSpecific) -> {
                     var metByGroup = byGroup.stream()
-                            .filter(otherByGroup::contains)
-                            .collect(Collectors.toUnmodifiableSet());
+                        .filter(otherByGroup::contains)
+                        .collect(Collectors.toUnmodifiableSet());
 
                     var metByArtifact = byArtifact.stream()
-                            .filter(otherByArtifact::contains)
-                            .collect(Collectors.toUnmodifiableSet());
+                        .filter(otherByArtifact::contains)
+                        .collect(Collectors.toUnmodifiableSet());
 
                     var metSpecific = new HashSet<Exclusion>();
                     specific.stream()
-                            .filter(exclusion -> {
-                                var group = exclusion.group();
-                                var artifact = exclusion.artifact();
-                                return otherByGroup.contains(group) ||
-                                       otherByArtifact.contains(artifact) ||
-                                       otherSpecific.contains(exclusion);
-                            })
-                            .forEach(metSpecific::add);
+                        .filter(exclusion -> {
+                            var group = exclusion.group();
+                            var artifact = exclusion.artifact();
+                            return otherByGroup.contains(group) ||
+                                   otherByArtifact.contains(artifact) ||
+                                   otherSpecific.contains(exclusion);
+                        })
+                        .forEach(metSpecific::add);
 
                     otherSpecific.stream()
-                            .filter(exclusion -> {
-                                var group = exclusion.group();
-                                var artifact = exclusion.artifact();
-                                return byGroup.contains(group) ||
-                                       byArtifact.contains(artifact) ||
-                                       specific.contains(exclusion);
-                            })
-                            .forEach(metSpecific::add);
+                        .filter(exclusion -> {
+                            var group = exclusion.group();
+                            var artifact = exclusion.artifact();
+                            return byGroup.contains(group) ||
+                                   byArtifact.contains(artifact) ||
+                                   specific.contains(exclusion);
+                        })
+                        .forEach(metSpecific::add);
 
                     if (metByGroup.isEmpty() && metByArtifact.isEmpty() && metSpecific.isEmpty()) {
                         yield ExcludeNone.INSTANCE;
-                    }
-                    else {
+                    } else {
                         yield new ExcludeSpecific(
-                                metByGroup,
-                                metByArtifact,
-                                Set.copyOf(metSpecific)
+                            metByGroup,
+                            metByArtifact,
+                            Set.copyOf(metSpecific)
                         );
                     }
                 }
@@ -345,18 +340,18 @@ public final class Exclusions {
         @Override
         public ExclusionData map(Function<String, String> f) {
             return new ExcludeSpecific(
-                    byGroup.stream()
-                            .map(group -> group.map(f))
-                            .collect(Collectors.toUnmodifiableSet()),
-                    byArtifact.stream()
-                            .map(artifact -> artifact.map(f))
-                            .collect(Collectors.toUnmodifiableSet()),
-                    specific.stream()
-                            .map(exclusion -> new Exclusion(
-                                    exclusion.group().map(f),
-                                    exclusion.artifact().map(f)
-                            ))
-                            .collect(Collectors.toUnmodifiableSet())
+                byGroup.stream()
+                    .map(group -> group.map(f))
+                    .collect(Collectors.toUnmodifiableSet()),
+                byArtifact.stream()
+                    .map(artifact -> artifact.map(f))
+                    .collect(Collectors.toUnmodifiableSet()),
+                specific.stream()
+                    .map(exclusion -> new Exclusion(
+                        exclusion.group().map(f),
+                        exclusion.artifact().map(f)
+                    ))
+                    .collect(Collectors.toUnmodifiableSet())
             );
         }
 
@@ -370,10 +365,9 @@ public final class Exclusions {
             return switch (other) {
                 case ExcludeNone __ -> false;
                 case ExcludeAll __ -> true;
-                case ExcludeSpecific excludeSpecific ->
-                        excludeSpecific.byGroup.containsAll(byGroup)
-                        && excludeSpecific.byArtifact.containsAll(byArtifact)
-                        && excludeSpecific.specific.containsAll(specific);
+                case ExcludeSpecific excludeSpecific -> excludeSpecific.byGroup.containsAll(byGroup)
+                                                        && excludeSpecific.byArtifact.containsAll(byArtifact)
+                                                        && excludeSpecific.specific.containsAll(specific);
             };
         }
 
@@ -381,11 +375,11 @@ public final class Exclusions {
         public Set<Exclusion> toSet() {
             var set = new HashSet<Exclusion>();
             byGroup.stream()
-                    .map(group -> new Exclusion(group, Artifact.ALL))
-                    .forEach(set::add);
+                .map(group -> new Exclusion(group, Artifact.ALL))
+                .forEach(set::add);
             byArtifact.stream()
-                    .map(artifact -> new Exclusion(Group.ALL, artifact))
-                    .forEach(set::add);
+                .map(artifact -> new Exclusion(Group.ALL, artifact))
+                .forEach(set::add);
             set.addAll(specific);
 
             return Set.copyOf(set);
@@ -395,8 +389,8 @@ public final class Exclusions {
     @Override
     public boolean equals(Object obj) {
         return (this == obj) || (
-                obj instanceof Exclusions exclusions &&
-                this.exclusionData.equals(exclusions.exclusionData)
+            obj instanceof Exclusions exclusions &&
+            this.exclusionData.equals(exclusions.exclusionData)
         );
     }
 
@@ -407,8 +401,7 @@ public final class Exclusions {
             cached = this.exclusionData.hashCode();
             this.hash = cached;
             return cached;
-        }
-        else {
+        } else {
             return this.hash;
         }
     }
