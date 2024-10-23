@@ -1,5 +1,6 @@
 package dev.mccue.resolve;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -116,6 +117,23 @@ public record Dependency(
             new Version(version),
             List.of(MavenRepository.central())
         );
+    }
+
+    public Dependency withExclusions(String... exclusions) {
+        Exclusion[] arr = new Exclusion[exclusions.length];
+        for (int i = 0, exclusionsLength = exclusions.length; i < exclusionsLength; i++) {
+            String exclusion = exclusions[i];
+            String[] split = exclusion.split(":");
+            if (split.length != 2 || split[0].isBlank() || split[1].isBlank()) {
+                throw new IllegalArgumentException(exclusion + " does not fit the group:artifact:version format");
+            }
+            arr[i] = new Exclusion(split[0], split[1]);
+        }
+        return withExclusions(arr);
+    }
+
+    public Dependency withExclusions(Exclusion... exclusions) {
+        return withExclusions(Exclusions.of(exclusions));
     }
 
     public Dependency withExclusions(Exclusions exclusions) {
