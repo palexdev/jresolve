@@ -35,16 +35,6 @@ public final class HttpTransport implements Transport {
     }
 
     @Override
-    public List<String> cachePrefix() {
-        var url = this.url;
-        if (url.endsWith("/")) {
-            url = url.substring(0, url.length() - 1);
-        }
-
-        return List.copyOf(Arrays.asList(url.split("((:)*/)+")));
-    }
-
-    @Override
     public GetFileResult getFile(List<String> pathElements) {
         var path = this.url + String.join("/", pathElements);
 

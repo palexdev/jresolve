@@ -28,9 +28,6 @@ public class MavenFetchTest {
                 new Library("org.clojure", "clojure"),
                 Path.of(
                     temp.toString(),
-                    "https",
-                    "repo1.maven.org",
-                    "maven2",
                     "org",
                     "clojure",
                     "clojure",
@@ -40,9 +37,6 @@ public class MavenFetchTest {
                 new Library("org.clojure", "spec.alpha"),
                 Path.of(
                     temp.toString(),
-                    "https",
-                    "repo1.maven.org",
-                    "maven2",
                     "org",
                     "clojure",
                     "spec.alpha",
@@ -52,9 +46,6 @@ public class MavenFetchTest {
                 new Library("org.clojure", "core.specs.alpha"),
                 Path.of(
                     temp.toString(),
-                    "https",
-                    "repo1.maven.org",
-                    "maven2",
                     "org",
                     "clojure",
                     "core.specs.alpha",
@@ -87,9 +78,6 @@ public class MavenFetchTest {
                 new Library("dev.mccue", "json"),
                 Path.of(
                     temp.toString(),
-                    "https",
-                    "repo1.maven.org",
-                    "maven2",
                     "dev",
                     "mccue",
                     "json",
@@ -135,9 +123,6 @@ public class MavenFetchTest {
             new Library("dev.mccue", "json"),
             Path.of(
                 temp.toString(),
-                "https",
-                "repo1.maven.org",
-                "maven2",
                 "dev",
                 "mccue",
                 "json",
@@ -165,9 +150,6 @@ public class MavenFetchTest {
             new Library("dev.mccue", "json"),
             Path.of(
                 temp.toString(),
-                "https",
-                "repo1.maven.org",
-                "maven2",
                 "dev",
                 "mccue",
                 "json",
@@ -197,9 +179,6 @@ public class MavenFetchTest {
                 new Library("dev.mccue", "json"),
                 Path.of(
                     temp.toString(),
-                    "https",
-                    "repo1.maven.org",
-                    "maven2",
                     "dev",
                     "mccue",
                     "json",
@@ -211,9 +190,6 @@ public class MavenFetchTest {
                 new Library("dev.mccue", "json"),
                 Path.of(
                     temp.toString(),
-                    "https",
-                    "repo1.maven.org",
-                    "maven2",
                     "dev",
                     "mccue",
                     "json",

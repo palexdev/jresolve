@@ -101,17 +101,13 @@ public final class MavenRepository {
         this.isSnapshot = false;
     }
 
-
+    /*
+     * TODO Ideally each repository should have a distinct cache, which could lead to different cache paths on the disk
+     */
     CacheKey cacheKey(Group group, Artifact artifact, Version version, Classifier classifier, Extension extension) {
-        var key = new ArrayList<>(
-            this.transport.cachePrefix()
-        );
-
-        key.addAll(getArtifactPath(group, artifact, version, classifier, extension));
-
-        return new CacheKey(key);
+        List<String> parts = getArtifactPath(group, artifact, version, classifier, extension);
+        return new CacheKey(parts);
     }
-
 
     InputStream getArtifact(
         Group group,

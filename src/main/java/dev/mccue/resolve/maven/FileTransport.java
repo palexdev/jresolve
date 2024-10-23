@@ -19,12 +19,6 @@ public final class FileTransport implements Transport {
         this.root = root;
     }
 
-
-    @Override
-    public List<String> cachePrefix() {
-        return List.copyOf(Arrays.asList(this.root.toString().split(File.pathSeparator)));
-    }
-
     @Override
     public GetFileResult getFile(List<String> pathElements) {
         try {
