@@ -1,9 +1,9 @@
-module dev.mccue.resolve {
+module dev.mccue.jresolve {
     requires static org.jspecify;
 
     requires java.xml;
     requires transitive java.net.http;
 
-    exports dev.mccue.resolve;
-    exports dev.mccue.resolve.maven;
+    exports dev.mccue.jresolve;
+    exports dev.mccue.jresolve.maven;
 }
