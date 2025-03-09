@@ -200,4 +200,20 @@ public class MavenFetchTest {
             )
         ), result);
     }
+
+    @Disabled
+    @Test
+    void fetchWithProfiles() throws IOException {
+        var temp = Files.createTempDirectory("temp");
+
+        var d1 = Dependency.mavenCentral("io.github.palexdev:materialfx:11.17.0");
+        var d2 = Dependency.mavenCentral("io.github.palexdev:virtualizedfx:21.6.0");
+
+        var result = new Resolve()
+            .addDependency(d1)
+            .addDependency(d2)
+            .withCache(Cache.standard(temp))
+            .fetch()
+            .run();
+    }
 }
